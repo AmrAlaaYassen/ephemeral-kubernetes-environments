@@ -13,17 +13,19 @@ jobs:
     
     steps:
       
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       #
       # Install Kubectl and connect.
       #
       # https://github.com/marketplace/actions/kubernetes-cli-kubectl
       #
-      - uses: tale/kubectl-action@v1
-        with:
-          base64-kube-config: ${{ secrets.KUBECONFIG }}
-          kubectl-version: v1.24.2
+      - name: Set up kubeconfig
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |
+          echo "$KUBECONFIG" > kubeconfig.yaml
+          export KUBECONFIG=$(pwd)/kubeconfig.yaml
 
       #
       # Deploys the MongoDB database to Kubernetes.
