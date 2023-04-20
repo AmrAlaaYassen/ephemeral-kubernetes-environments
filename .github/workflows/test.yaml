@@ -1,18 +1,14 @@
-
-
 name: Test connection
 
 on:
   workflow_dispatch:
 
 jobs:
-
   publish:
     runs-on: self-hosted
     timeout-minutes: 5
-    
+
     steps:
-      
       - uses: actions/checkout@v2
 
       #
@@ -31,4 +27,4 @@ jobs:
       # Deploys the MongoDB database to Kubernetes.
       #
       - name: Deploy
-        run: kubectl get pods 
+        run: kubectl get pods
