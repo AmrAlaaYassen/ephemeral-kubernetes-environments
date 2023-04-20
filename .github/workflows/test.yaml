@@ -26,5 +26,8 @@ jobs:
       #
       # Deploys the MongoDB database to Kubernetes.
       #
-      - name: Deploy
-        run: kubectl get pods
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBECONFIG }}
+        with:
+          args: get pods
