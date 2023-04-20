@@ -1,0 +1,32 @@
+
+
+name: Test connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  publish:
+    runs-on: 
+    timeout-minutes: 5
+    
+    steps:
+      
+      - uses: actions/checkout@v3
+
+      #
+      # Install Kubectl and connect.
+      #
+      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
+      #
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBECONFIG }}
+          kubectl-version: v1.24.2
+
+      #
+      # Deploys the MongoDB database to Kubernetes.
+      #
+      - name: Deploy
+        run: kubectl get pods 
