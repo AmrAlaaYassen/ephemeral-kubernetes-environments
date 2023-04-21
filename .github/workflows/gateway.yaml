@@ -18,17 +18,31 @@ jobs:
       - uses: actions/checkout@v2
 
 
-      - name: Kaniko build
-        uses: aevea/action-kaniko@master
+      # - name: Kaniko build
+      #   uses: aevea/action-kaniko@master
+      #   with:
+      #     image: amralaayassen/ephemeral-envs-gateway
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     tag_with_latest: true
+      #     tag: ${{github.sha}}
+      #     path: ./gateway
+      #     build_file: Dockerfile
+      #     debug: true
+      - name: Log in to Red Hat Registry
+        uses: redhat-actions/podman-login@v1
         with:
-          image: amralaayassen/ephemeral-envs-gateway
+          registry: registry-1.docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tag_with_latest: true
-          tag: ${{github.sha}}
-          path: ./gateway
-          build_file: Dockerfile
-          debug: true
+      - name: Buildah Action
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: amralaayassen/ephemeral-envs-gateway
+          tags: ${{ github.sha }}
+          containerfiles: |
+            ./gateway/Dockerfile
+         
       
       - uses: actions/setup-node@v1
         with:
