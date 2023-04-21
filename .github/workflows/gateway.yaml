@@ -24,7 +24,7 @@ jobs:
         with:
           registry: asia.gcr.io
           image: amralaayassen/ephemeral-envs-gateway
-          username: ${{ secretes.DOCKER_USERNAME }}
+          username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_with_latest: true
           tag: ${{VERSION}}
