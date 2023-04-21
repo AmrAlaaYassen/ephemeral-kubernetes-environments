@@ -5,7 +5,7 @@ on:
 
 jobs:
   publish:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     timeout-minutes: 5
 
     env:
@@ -24,10 +24,10 @@ jobs:
         with:
           registry: asia.gcr.io
           image: amralaayassen/ephemeral-envs-gateway
-          username: ${{ secretes.DOCKER_USERNAME }}
+          username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_with_latest: true
-          tag: ${{VERSION}}
+          tag: $VERSION
           path: ./gateway
           build_file: Dockerfile
           debug: true
