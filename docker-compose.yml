@@ -1,0 +1,54 @@
+version: '3'
+services:
+
+  db:
+    image: mongo:5.0.12
+    container_name: db
+    ports:
+     - "4002:27017"
+    restart: always
+
+  db-fixture:
+    image: db-fixture
+    build: ./db-fixture
+    container_name: db-fixture
+    depends_on:
+      - db
+    
+  worker:
+    image: worker
+    build: 
+      context: ./worker
+      dockerfile: Dockerfile-dev
+    container_name: worker
+    volumes:
+     - ./tmp/npm:/root/.npm:z
+     - ./worker/src:/usr/src/app/src:z
+    ports:
+     - "4001:80"
+    environment:
+     - PORT=80
+     - DBHOST=mongodb://db:27017
+     - NODE_ENV=development
+    depends_on:
+     - db
+    restart: always
+
+  gateway:
+    image: gateway
+    build: 
+      context: ./gateway
+      dockerfile: Dockerfile-dev
+    container_name: gateway
+    volumes:
+     - ./tmp/npm:/root/.npm:z
+     - ./gateway/src:/usr/src/app/src:z
+    ports:
+     - "4000:80"
+    environment:
+     - PORT=80
+     - NODE_ENV=development
+    depends_on:
+     - worker
+    restart: always
+
