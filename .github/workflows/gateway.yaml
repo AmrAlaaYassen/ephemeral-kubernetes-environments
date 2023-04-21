@@ -21,7 +21,6 @@ jobs:
       - name: Kaniko build
         uses: aevea/action-kaniko@master
         with:
-          registry: asia.gcr.io
           image: amralaayassen/ephemeral-envs-gateway
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
