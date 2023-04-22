@@ -42,19 +42,11 @@ jobs:
         with:
           args: get pods
 
-      - uses: "finnp/create-file-action@master"
-        env:
-          FILE_NAME: "tenant.yaml"
-          FILE_DATA: "
-          apiVersion: capsule.clastix.io/v1beta2
-          kind: Tenant
-          metadata:
-            name: dev
-          spec:
-            owners:
-            - name: amralaayassen
-              kind: User
-          "
+      - name: install YQ
+        run: wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY}.tar.gz -O - | tar xz && mv ${BINARY} /usr/bin/yq
+      
+      - name: update tenant name
+        run: yq e -i '.metadata.name = "gateway"' tenant.yaml
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
