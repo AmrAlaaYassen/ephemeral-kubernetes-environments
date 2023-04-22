@@ -42,16 +42,25 @@ jobs:
         with:
           args: get pods
 
-      - name: Create Tenant
-        run: |
-          kubectl create -f - << EOF
-          apiVersion: capsule.clastix.io/v1beta2
-          kind: Tenant
-          metadata:
-            name: dev
-          spec:
-            owners:
-            - name: amralaayassen
-              kind: User
-          EOF
-          kubectl get tenants
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with: 
+          args: |
+            create -f - << EOF
+              apiVersion: capsule.clastix.io/v1beta2
+              kind: Tenant
+              metadata:
+                name: dev
+              spec:
+                owners:
+                - name: amralaayassen
+                  kind: User
+            EOF
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with: 
+          args: |
+            get tenants
+           
