@@ -29,6 +29,5 @@ set -u # or set -o nounset
 : "$REGISTRY_PW"
 
 export DIR=$1
-echo $REGISTRY_PW
-echo $REGISTRY_PW | docker login  --username $REGISTRY_UN --password-stdin
+
 docker push $CONTAINER_REGISTRY/ephemeral-envs-$DIR:$VERSION
