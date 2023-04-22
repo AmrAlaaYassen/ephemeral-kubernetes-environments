@@ -43,21 +43,21 @@ jobs:
       #     args: get pods
 
       - name: install YQ
-        run: wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
-      
+        run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
+      - name: github actor
+        run: echo ${{GITHUB_ACTOR}}
       - name: update tenant name
         run: yq e -i '.metadata.name = "gateway"' tenant.yaml
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with: 
+        with:
           args: |
             create -f tenant.yaml
-            
+
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with: 
+        with:
           args: |
             get tenants
-           
