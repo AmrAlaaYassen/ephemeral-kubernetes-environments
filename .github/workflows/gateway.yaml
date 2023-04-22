@@ -42,21 +42,26 @@ jobs:
         with:
           args: get pods
 
+      - uses: "finnp/create-file-action@master"
+        env:
+          FILE_NAME: "tenant.yaml"
+          FILE_DATA: "
+          apiVersion: capsule.clastix.io/v1beta2
+          kind: Tenant
+          metadata:
+            name: dev
+          spec:
+            owners:
+            - name: amralaayassen
+              kind: User
+          "
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with: 
           args: |
-            create -f - << EOF
-              apiVersion: capsule.clastix.io/v1beta2
-              kind: Tenant
-              metadata:
-                name: dev
-              spec:
-                owners:
-                - name: amralaayassen
-                  kind: User
-            EOF
+            create -f tenant.yaml
+            
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
