@@ -9,14 +9,12 @@ jobs:
     timeout-minutes: 5
 
     env:
-      CONTAINER_REGISTRY: ${{secrets.CONTAINER_REGISTRY}}
-      DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-      DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-
-
+      VERSION: ${{ github.sha }}
+      CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+      REGISTRY_UN: ${{ secrets.REGISTRY_UN }}
+      REGISTRY_PW: ${{ secrets.REGISTRY_PW  }}
     steps:
       - uses: actions/checkout@v2
-
 
       # - name: Kaniko build
       #   uses: aevea/action-kaniko@master
@@ -29,21 +27,28 @@ jobs:
       #     path: ./gateway
       #     build_file: Dockerfile
       #     debug: true
-      - name: Log in to Red Hat Registry
-        uses: redhat-actions/podman-login@v1
-        with:
-          registry: registry-1.docker.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Buildah Action
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: amralaayassen/ephemeral-envs-gateway
-          tags: ${{ github.sha }}
-          containerfiles: |
-            ./gateway/Dockerfile
-         
-      
+      - name: Build
+        run: ./scripts/build-image.sh gateway
+
+      #
+      # Publishes the Docker image to the container registry.
+      #
+      - name: Publish
+        run: ./scripts/push-image.sh gateway
+      # - name: Log in to Red Hat Registry
+      #   uses: redhat-actions/podman-login@v1
+      #   with:
+      #     registry: registry-1.docker.io
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      # - name: Buildah Action
+      #   uses: redhat-actions/buildah-build@v2
+      #   with:
+      #     image: amralaayassen/ephemeral-envs-gateway
+      #     tags: ${{ github.sha }}
+      #     containerfiles: |
+      #       ./gateway/Dockerfile
+
       - uses: actions/setup-node@v1
         with:
           node-version: 18
@@ -56,6 +61,3 @@ jobs:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
           args: get pods
-
-      
-     
