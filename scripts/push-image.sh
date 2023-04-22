@@ -30,4 +30,4 @@ set -u # or set -o nounset
 
 export DIR=$1
 echo $REGISTRY_PW | docker login $CONTAINER_REGISTRY --username $REGISTRY_UN --password-stdin
-docker push $CONTAINER_REGISTRY/$DIR:$VERSION
+docker push $CONTAINER_REGISTRY/ephemeral-envs-$DIR:$VERSION
