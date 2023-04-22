@@ -42,9 +42,16 @@ jobs:
         with:
           args: get pods
 
-      - name: Install V-Cluster
+      - name: Create Tenant
         run: |
-          # Install vCluster
-          curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64"; sudo install -c -m 0755 vcluster /usr/local/bin && rm -f vcluster;
-          vcluster --version
-          vcluster create mycluster
+          kubectl create -f - << EOF
+          apiVersion: capsule.clastix.io/v1beta2
+          kind: Tenant
+          metadata:
+            name: dev
+          spec:
+            owners:
+            - name: amralaayassen
+              kind: User
+          EOF
+          kubectl get tenants
