@@ -10,6 +10,8 @@
 # Exit immediately if a command exits with a non-zero status
 set -u # or set -o nounset
 : "$KUBECONFIG".
+cat $KUBECONFIG | base64 -d > ./KUBECONFIG.conf
+export KUBECONFIG=KUBECONFIG.conf
 function check_command() {
     local command=$1
 
