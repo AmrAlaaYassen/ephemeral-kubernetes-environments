@@ -84,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: 'dev-${{github.actor}}'
-          path: dev-${{github.actor_id}}.kubeconfig
+          path: dev-*
 
       # - uses: actions-hub/kubectl@master
       #   env:
