@@ -49,7 +49,7 @@ jobs:
         run: echo ${{env.GITHUB_ACTOR}}
 
       - name: update tenant name
-        run: yq e -i '.metadata.name = "gateway"' tenant.yaml
+        run: yq e -i '.metadata.name = "gateway-${{env.GITHUB_ACTOR}}"' tenant.yaml
 
       - uses: actions-hub/kubectl@master
         env:
