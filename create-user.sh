@@ -7,9 +7,11 @@
 # e.g.: ./create-user.sh alice oil
 #       where `oil` is the Tenant and `alice` the owner
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
-
+# Exit immediately if a command exits with a non-zero status
+set -u # or set -o nounset
+: "$KUBE_CONFIG"
+cat $KUBE_CONFIG | base64 -d > ./KUBECONFIG.conf
+export KUBECONFIG=KUBECONFIG.conf
 function check_command() {
     local command=$1
 
@@ -57,6 +59,7 @@ kubectl delete csr ${USER}-${TENANT} 2>/dev/null || true
 #
 # Create a new CSR file.
 #
+
 if [ $(kubectl version -o json | jq -r .serverVersion.minor) -gt 19 ]; then
 cat <<EOF > ${TMPDIR}/${USER}-${TENANT}-csr.yaml
 apiVersion: certificates.k8s.io/v1
@@ -103,7 +106,7 @@ CLUSTER=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"$CONTEXT\"})
 SERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name == \"${CLUSTER}\"})].cluster.server}")
 CA=$(kubectl config view --flatten -o jsonpath="{.clusters[?(@.name == \"${CLUSTER}\"})].cluster.certificate-authority-data}")
 
-cat > ${USER}-${TENANT}.kubeconfig <<EOF
+cat > ${USER}.kubeconfig <<EOF
 apiVersion: v1
 clusters:
 - cluster:
@@ -125,5 +128,5 @@ users:
     client-key: ${USER}-${TENANT}.key
 EOF
 
-echo "kubeconfig file is:" ${USER}-${TENANT}.kubeconfig
-echo "to use it as" ${USER} "export KUBECONFIG="${USER}-${TENANT}.kubeconfig
+echo "kubeconfig file is:" ${USER}.kubeconfig
+echo "to use it as" ${USER} "export KUBECONFIG="${USER}.kubeconfig

@@ -67,6 +67,8 @@ jobs:
           kubectl-version: v1.24.2
 
       - name: create KUBECONFIG
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
           sudo ./create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
 
@@ -78,13 +80,13 @@ jobs:
             create ns "gateway-dev-${{github.actor_id}}-${{github.sha}}"
 
       - name: list files
-        run: ls -lR 
+        run: ls -lR
 
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
         with:
           name: 'dev-${{github.actor}}'
-          path: ./scripts/dev-${{github.actor_id}}.kubeconfig
+          path: dev-*
 
       # - uses: actions-hub/kubectl@master
       #   env:
