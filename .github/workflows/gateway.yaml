@@ -13,6 +13,7 @@ jobs:
       CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
       REGISTRY_UN: ${{ secrets.DOCKER_USERNAME }}
       REGISTRY_PW: ${{ secrets.DOCKER_PASSWORD  }}
+      ACTOR: ${{ github.actor}}
     steps:
       - uses: actions/checkout@v2
         name: checkout
@@ -41,15 +42,19 @@ jobs:
       #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       #   with:
       #     args: get pods
-
+      - name: Show GitHub context
+        run: echo "$GITHUB_CONTEXT"
+        shell: bash
       - name: install YQ
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
       - name: github actor
-        run: echo ${{env.GITHUB_ACTOR}}
+        run: echo ${{env.ACTOR}}
 
       - name: update tenant name
-        run: yq e -i '.metadata.name = "gateway"' tenant.yaml
+        run: |
+          name="gateway-${{env.ACTOR}}-${{env.VERSION}}";declare -l name;name=$name
+          yq e -i '.metadata.name = "$name"' tenant.yaml
 
       - uses: actions-hub/kubectl@master
         env:
