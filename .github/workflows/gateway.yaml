@@ -13,6 +13,7 @@ jobs:
       CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
       REGISTRY_UN: ${{ secrets.DOCKER_USERNAME }}
       REGISTRY_PW: ${{ secrets.DOCKER_PASSWORD  }}
+      KUBECONFIG: ${{secrets.KUBE_CONFIG}}
     steps:
       - uses: actions/checkout@v2
         name: checkout

@@ -7,7 +7,9 @@
 # e.g.: ./create-user.sh alice oil
 #       where `oil` is the Tenant and `alice` the owner
 
-# Exit immediately if a command exits with a non-zero status.
+# Exit immediately if a command exits with a non-zero status
+set -u # or set -o nounset
+: "$KUBECONFIG".
 function check_command() {
     local command=$1
 
