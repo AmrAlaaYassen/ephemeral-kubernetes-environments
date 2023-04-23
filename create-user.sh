@@ -8,8 +8,7 @@
 #       where `oil` is the Tenant and `alice` the owner
 
 # Exit immediately if a command exits with a non-zero status
-set -u # or set -o nounset
-: "$KUBE_CONFIG"
+
 cat $KUBE_CONFIG | base64 -d > ./KUBECONFIG.conf
 export KUBECONFIG=KUBECONFIG.conf
 function check_command() {
