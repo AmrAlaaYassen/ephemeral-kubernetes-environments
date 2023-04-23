@@ -49,7 +49,7 @@ jobs:
         run: |
 
           yq e -i '.metadata.name = "gateway-dev-${{ github.actor_id }}-${{github.sha}}"' tenant.yaml
-          yq e -i '.spec.oweners[0].name = "dev-${{github.actor_id}}"'
+          yq e -i '.spec.oweners[0].name = "dev-${{github.actor_id}}"' tenant.yaml
           sudo ./create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
 
       - uses: actions-hub/kubectl@master
