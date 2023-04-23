@@ -60,7 +60,7 @@ kubectl delete csr ${USER}-${TENANT} 2>/dev/null || true
 #
 # Create a new CSR file.
 #
-kubectl get pods
+kubectl get pods --kubeconfig $KUBECONFIG
 kubectl --version
 if [ $(kubectl version -o json | jq -r .serverVersion.minor) -gt 19 ]; then
 cat <<EOF > ${TMPDIR}/${USER}-${TENANT}-csr.yaml
