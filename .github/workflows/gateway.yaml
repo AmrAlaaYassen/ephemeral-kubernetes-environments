@@ -13,7 +13,6 @@ jobs:
       CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
       REGISTRY_UN: ${{ secrets.DOCKER_USERNAME }}
       REGISTRY_PW: ${{ secrets.DOCKER_PASSWORD  }}
-      ACTOR: ${{ github.actor}}
     steps:
       - uses: actions/checkout@v2
         name: checkout
@@ -42,19 +41,16 @@ jobs:
       #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       #   with:
       #     args: get pods
-      - name: Show GitHub context
-        run: echo "$GITHUB_CONTEXT"
-        shell: bash
+
       - name: install YQ
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
-      - name: github actor
-        run: echo ${{env.ACTOR}}
-
       - name: update tenant name
         run: |
-          name="gateway-${{env.ACTOR}}-${{env.VERSION}}";declare -l name;name=$name
-          yq e -i '.metadata.name = "$name"' tenant.yaml
+
+          yq e -i '.metadata.name = "gateway-dev-${{ github.actor_id }}-${{github.sha}}"' tenant.yaml
+          yq e -i '.spec.oweners[0].name = "dev-${{github.actor_id}}"'
+          sudo ./create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
 
       - uses: actions-hub/kubectl@master
         env:
@@ -65,7 +61,21 @@ jobs:
 
       - uses: actions-hub/kubectl@master
         env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          KUBE_CONFIG: dev-${{github.actor_id}}
         with:
           args: |
-            get tenants
+            create ns "gateway-dev-${{github.actor_id}}"
+
+
+      # - uses: actions-hub/kubectl@master
+      #   env:
+      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      #   with:
+      #     args: |
+      #       get tenants
+      #       - uses: actions-hub/kubectl@master
+      #       env:
+      #         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      #       with:
+      #         args: |
+      #           delete tenant "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
