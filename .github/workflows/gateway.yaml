@@ -68,7 +68,7 @@ jobs:
 
       - name: create KUBECONFIG
         run: |
-          sudo ./scripts/create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
+          sudo ./create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
 
       - uses: actions-hub/kubectl@master
         env:
@@ -78,7 +78,7 @@ jobs:
             create ns "gateway-dev-${{github.actor_id}}-${{github.sha}}"
 
       - name: list files
-        run: ls -lR ./scripts
+        run: ls -lR 
 
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
