@@ -77,6 +77,9 @@ jobs:
           args: |
             create ns "gateway-dev-${{github.actor_id}}-${{github.sha}}"
 
+      - name: list files
+        run: ls -lR ./scripts
+
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
         with:
