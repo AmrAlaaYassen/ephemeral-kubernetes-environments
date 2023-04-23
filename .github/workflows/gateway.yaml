@@ -68,7 +68,7 @@ jobs:
 
       - name: create KUBECONFIG
         env:
-          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
           sudo ./create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
 
