@@ -54,7 +54,8 @@ jobs:
       - name: update tenant name
         run: |
           name="gateway-${{env.ACTOR}}-${{env.VERSION}}" \
-          yq e -i '.metadata.name = "${name,}"' tenant.yaml
+          name= ${name,}
+          yq e -i '.metadata.name = "$name"' tenant.yaml
 
       - uses: actions-hub/kubectl@master
         env:
