@@ -61,6 +61,10 @@ jobs:
           args: |
             create -f tenant.yaml
 
+      - name: create KUBECONFIG
+        run: |
+          sudo ./scripts/create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
+
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: dev-${{github.actor_id}}
