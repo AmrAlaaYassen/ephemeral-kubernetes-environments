@@ -13,7 +13,6 @@ jobs:
       CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
       REGISTRY_UN: ${{ secrets.DOCKER_USERNAME }}
       REGISTRY_PW: ${{ secrets.DOCKER_PASSWORD  }}
-      GITHUB_ACTOR: ${{GITHUB_ACTOR}}
     steps:
       - uses: actions/checkout@v2
         name: checkout
