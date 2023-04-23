@@ -16,7 +16,7 @@ mkdir -p ~/.local/bin
 mv ./kubectl ~/.local/bin/kubectl
 kubectl version --client
 set -e
-
+: "$KUBECONFIG"
 function check_command() {
     local command=$1
 

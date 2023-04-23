@@ -60,14 +60,16 @@ jobs:
         with:
           args: |
             create -f tenant.yaml
-      
+
       - name: Setup Kube config
         uses: azure/k8s-set-context@v1
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
-          
+
       - name: create KUBECONFIG
+        env:
+          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
           sudo ./scripts/create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
 
