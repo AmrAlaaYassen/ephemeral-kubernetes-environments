@@ -45,6 +45,8 @@ jobs:
       - name: install YQ
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
+      - uses: azure/setup-kubectl@v3
+        id: install-kubectl 
       - name: update tenant name
         run: |
 
