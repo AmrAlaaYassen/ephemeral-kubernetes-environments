@@ -46,13 +46,13 @@ jobs:
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
       - uses: azure/setup-kubectl@v3
-        id: install-kubectl 
+        id: install-kubectl
       - name: update tenant name
         run: |
 
           yq e -i '.metadata.name = "gateway-dev-${{ github.actor_id }}-${{github.sha}}"' tenant.yaml
-          yq e -i '.spec.oweners[0].name = "dev-${{github.actor_id}}"' tenant.yaml
-          sudo ./scripts/create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
+          yq e -i '.spec.owners[0].name = "dev-${{github.actor_id}}"' tenant.yaml
+          cat tenant.yaml
 
       - uses: actions-hub/kubectl@master
         env:
@@ -60,6 +60,11 @@ jobs:
         with:
           args: |
             create -f tenant.yaml
+
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+          kubectl-version: v1.24.2
 
       - name: create KUBECONFIG
         run: |
@@ -76,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: 'dev-${{github.actor}}'
-          path: 'dev-${{github.actor_id}}'
+          path: ./scripts/'dev-${{github.actor_id}}'
 
       # - uses: actions-hub/kubectl@master
       #   env:

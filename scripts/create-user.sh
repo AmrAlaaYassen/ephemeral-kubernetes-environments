@@ -10,7 +10,6 @@
 # Exit immediately if a command exits with a non-zero status.
 
 
-set -e
 
 function check_command() {
     local command=$1
@@ -59,6 +58,8 @@ kubectl delete csr ${USER}-${TENANT} 2>/dev/null || true
 #
 # Create a new CSR file.
 #
+kubectl get pods
+kubectl --version
 if [ $(kubectl version -o json | jq -r .serverVersion.minor) -gt 19 ]; then
 cat <<EOF > ${TMPDIR}/${USER}-${TENANT}-csr.yaml
 apiVersion: certificates.k8s.io/v1
