@@ -66,6 +66,11 @@ jobs:
           args: |
             create ns "gateway-dev-${{github.actor_id}}"
 
+      - name: Artifacting KUBECONFIG Fille
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'dev-${{github.actor}}'
+          path: 'dev-${{github.actor_id}}'
 
       # - uses: actions-hub/kubectl@master
       #   env:
