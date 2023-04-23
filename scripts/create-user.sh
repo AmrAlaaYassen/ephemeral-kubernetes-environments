@@ -8,6 +8,8 @@
 #       where `oil` is the Tenant and `alice` the owner
 
 # Exit immediately if a command exits with a non-zero status.
+
+
 set -e
 
 function check_command() {
