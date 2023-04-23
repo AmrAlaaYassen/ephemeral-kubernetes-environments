@@ -51,8 +51,8 @@ jobs:
         run: |
 
           yq e -i '.metadata.name = "gateway-dev-${{ github.actor_id }}-${{github.sha}}"' tenant.yaml
-          yq e -i '.spec.oweners[0].name = "dev-${{github.actor_id}}"' tenant.yaml
-
+          yq e -i '.spec.owners[0].name = "dev-${{github.actor_id}}"' tenant.yaml
+          cat tenant.yaml
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
