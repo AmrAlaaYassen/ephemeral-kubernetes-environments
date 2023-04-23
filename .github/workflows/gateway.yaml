@@ -46,7 +46,7 @@ jobs:
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
       - uses: azure/setup-kubectl@v3
-        id: install-kubectl 
+        id: install-kubectl
       - name: update tenant name
         run: |
 
@@ -61,6 +61,8 @@ jobs:
             create -f tenant.yaml
 
       - name: create KUBECONFIG
+        env:
+          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
           sudo ./scripts/create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
 
