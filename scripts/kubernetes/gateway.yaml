@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: "amralaayassen/ephemeral-envs-gateway:${GITHUB_REF##*/}"
+          image: "amralaayassen/ephemeral-envs-gateway:"
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT
@@ -50,4 +50,4 @@ spec:
   template:
     spec:
       containers:
-        - image: 'amralaayassen/ephemeral-envs-gateway:${GITHUB_REF##*/}'
+        - image: 'amralaayassen/ephemeral-envs-gateway:'
