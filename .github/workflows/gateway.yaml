@@ -14,6 +14,8 @@ jobs:
       REGISTRY_UN: ${{ secrets.DOCKER_USERNAME }}
       REGISTRY_PW: ${{ secrets.DOCKER_PASSWORD  }}
     steps:
+      - name: print env
+        run: env
       - uses: actions/checkout@v2
         name: checkout
         with:
@@ -61,7 +63,7 @@ jobs:
 
       - name: update image
         run: |
-          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.head_ref }}"' ./scripts/kubernetes/gateway.yaml
+          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.sha }}"' ./scripts/kubernetes/gateway.yaml
 
       - name: Update changes
         run: |
