@@ -40,8 +40,18 @@ jobs:
         run: |
           sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-          kubectl get pods 
-
+          kubectl get pods
+      - name: install vcluster
+        run: |
+         sudo curl -s -L "https://github.com/loft-sh/vcluster/releases/latest" | sed -nE 's!.*"([^"]*vcluster-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o vcluster && chmod +x vcluster;
+         sudo mv vcluster /usr/local/bin;
+      - name: create vcluster for preview env
+        run: |
+         vcluster create "gateway-dev-${{ github.actor_id }}-${{github.sha}}" --namespace preview-dev;
+         ls -lR
+         export KUBECONFIG=$PWD/kubeconfig.yaml
+         sleep 10
+         k run nginx --image nginx
       # - name: install YQ
       #   run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
