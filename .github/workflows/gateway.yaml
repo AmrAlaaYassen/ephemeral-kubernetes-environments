@@ -49,10 +49,10 @@ jobs:
       - name: create vcluster for preview env
         run: |
           vcluster create gateway-dev-${{ github.sha }} --namespace preview-${{github.sha}} 
-          sleep 60
+          sleep 20
           vcluster connect gateway-dev-${{ github.sha }} --namespace preview-${{github.sha}} 
 
-          sleep 60
+          sleep 20
           kubectl create ns gateway-dev-${{ github.actor_id }};
 
       - name: install YQ
