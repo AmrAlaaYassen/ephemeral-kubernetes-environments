@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  dev-deploy:
     runs-on: self-hosted
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     env:
       VERSION: ${GITHUB_REF##*/}
@@ -31,12 +31,6 @@ jobs:
       - name: Publish
         run: ./scripts/push-image.sh worker ${{github.sha}}
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
 
       - name: install kubectl
         run: |
@@ -62,7 +56,7 @@ jobs:
       - name: update image
         run: |
           yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-worker:${{ github.sha }}"' ./scripts/kubernetes/worker.yaml
-          yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db.worker-dev-${{ github.actor_id }}.svc.cluster.local:27017"' ./scripts/kubernetes/worker.yaml
+          yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db:27017"' ./scripts/kubernetes/worker.yaml
 
 
       - name: Update changes

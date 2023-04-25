@@ -1,0 +1,31 @@
+name: pr
+on:
+  pull_request:
+    types: [closed]
+    paths:
+      - 'worker/**'
+jobs:
+  pr-deplpy:
+    runs-on: self-hosted
+    timeout-minutes: 8
+
+    steps:
+      - uses: actions/checkout@v2
+        name: checkout
+        with:
+          persist-credentials: false
+
+      - name: install kubectl
+        run: |
+          sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+          sudo rm -rf kubectl
+          kubectl get pods
+
+      - name: install vcluster
+        run: |
+          curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && sudo rm -f vcluster
+      - name: create vcluster for PR env
+        run: |
+          vcluster delete worker-pr-${{ github.event.pull_request.number }} &
+          sleep 20

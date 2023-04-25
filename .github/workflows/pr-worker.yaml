@@ -1,10 +1,13 @@
-name: Development Environment gateway
-
+name: worker PR
 on:
-  workflow_dispatch:
-
+  pull_request:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - main
+    paths:
+      - 'worker/**'
 jobs:
-  dev-deploy:
+  pr-deploy:
     runs-on: self-hosted
     timeout-minutes: 10
 
@@ -26,36 +29,37 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build
-        run: ./scripts/build-image.sh gateway ${{github.sha}}
+        run: ./scripts/build-image.sh worker pr-${{ github.event.pull_request.number }}
 
       - name: Publish
-        run: ./scripts/push-image.sh gateway ${{github.sha}}
+        run: ./scripts/push-image.sh worker pr-${{ github.event.pull_request.number }}
 
-    
+
       - name: install kubectl
         run: |
           sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
           sudo rm -rf kubectl
           kubectl get pods
+          
       - name: install vcluster
         run: |
           curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && sudo rm -f vcluster
-      - name: create vcluster for preview env
+      - name: create vcluster for PR env
         run: |
-          vcluster create gateway-dev-${{ github.sha }} --namespace preview-${{github.sha}} &
+          vcluster create worker-pr-${{ github.event.pull_request.number }} --namespace pr-${{ github.event.pull_request.number }} &
           sleep 20
-          vcluster connect gateway-dev-${{ github.sha }} --namespace preview-${{github.sha}} &
+          vcluster connect worker-pr-${{ github.event.pull_request.number }} --namespace pr-${{ github.event.pull_request.number }} &
 
           sleep 20
-          kubectl create ns gateway-dev-${{ github.actor_id }};
+          kubectl create ns worker-pr-${{ github.actor_id }};
 
       - name: install YQ
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
       - name: update image
         run: |
-          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.sha }}"' ./scripts/kubernetes/gateway.yaml
+          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-worker:pr-${{ github.event.pull_request.number }}"' ./scripts/kubernetes/worker.yaml
           yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db:27017"' ./scripts/kubernetes/worker.yaml
 
       - name: Update changes
@@ -73,10 +77,10 @@ jobs:
       - name: Deploy
         run: |
           sudo curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | sudo bash && \
-          ./kustomize build ./scripts/kubernetes | kubectl apply -f - -n gateway-dev-${{ github.actor_id }}
+          ./kustomize build ./scripts/kubernetes | kubectl apply -f - -n worker-pr-${{ github.actor_id }}
 
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
         with:
-          name: 'dev-${{github.actor}}'
+          name: 'pr-${{github.actor}}'
           path: ~/.kube/config
