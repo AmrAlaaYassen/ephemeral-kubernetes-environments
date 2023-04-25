@@ -52,7 +52,7 @@ jobs:
          ls -lR
          export KUBECONFIG=$PWD/kubeconfig.yaml
          sleep 10
-         k run nginx --image nginx
+         kubectl run nginx --image nginx
       # - name: install YQ
       #   run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
