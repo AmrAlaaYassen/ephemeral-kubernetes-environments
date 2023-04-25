@@ -62,6 +62,8 @@ jobs:
       - name: update image
         run: |
           yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-worker:${{ github.sha }}"' ./scripts/kubernetes/worker.yaml
+          yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db.worker-dev-${{ github.actor_id }}.svc.cluster.local:27017"' ./scripts/kubernetes/worker.yaml
+
 
       - name: Update changes
         run: |
