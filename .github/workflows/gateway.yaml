@@ -28,10 +28,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build
-        run: ./scripts/build-image.sh gateway ${GITHUB_REF##*/}
+        run: ./scripts/build-image.sh gateway ${{github.sha}}
 
       - name: Publish
-        run: ./scripts/push-image.sh gateway ${GITHUB_REF##*/}
+        run: ./scripts/push-image.sh gateway ${{github.sha}}
 
       - uses: actions/setup-node@v1
         with:
