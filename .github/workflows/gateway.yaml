@@ -77,7 +77,7 @@ jobs:
 
       - name: Deploy
         run: |
-          sudo curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+          sudo curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | sudo bash && \
           kustomize build ./scripts/kubernetes | kubectl apply -f - -n gateway-dev-${{ github.actor_id }}
 
       - name: Artifacting KUBECONFIG Fille
