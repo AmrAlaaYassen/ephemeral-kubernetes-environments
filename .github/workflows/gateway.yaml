@@ -36,11 +36,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: get pods
+      - name: install kubectl
+        run: |
+          sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+          kubectl get pods 
 
       # - name: install YQ
       #   run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
