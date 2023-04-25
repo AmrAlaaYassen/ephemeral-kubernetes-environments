@@ -50,9 +50,11 @@ jobs:
 
          vcluster connect gateway-dev-${{ github.actor_id }} --namespace preview-dev &
          ls -lR
-         export KUBECONFIG=$PWD/kubeconfig.yaml
          sleep 10
-         kubectl run nginx --image nginx
+         kubectl create ns gateway;
+         kubectl run nginx --image nginx -n gateway;
+         sleep 10;
+         vcluster disconnect
       # - name: install YQ
       #   run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
@@ -93,11 +95,11 @@ jobs:
       # - name: list files
       #   run: ls -lR
 
-      # - name: Artifacting KUBECONFIG Fille
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: 'dev-${{github.actor}}'
-      #     path: dev-*
+      - name: Artifacting KUBECONFIG Fille
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'dev-${{github.actor}}'
+          path: ~/.kube/config
 
       # - uses: actions-hub/kubectl@master
       #   env:
