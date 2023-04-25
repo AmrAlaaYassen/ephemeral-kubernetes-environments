@@ -7,9 +7,9 @@ on:
     paths:
       - 'gateway/**'
 jobs:
-  publish:
+  pr-deplpy:
     runs-on: self-hosted
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     env:
       VERSION: ${GITHUB_REF##*/}
@@ -34,12 +34,6 @@ jobs:
       - name: Publish
         run: ./scripts/push-image.sh gateway pr-${{ github.event.pull_request.number }}
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
 
       - name: install kubectl
         run: |
@@ -64,7 +58,7 @@ jobs:
 
       - name: update image
         run: |
-          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.sha }}"' ./scripts/kubernetes/gateway.yaml
+          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:pr-${{ github.event.pull_request.number }}"' ./scripts/kubernetes/gateway.yaml
           yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db:27017"' ./scripts/kubernetes/worker.yaml
 
 

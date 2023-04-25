@@ -7,9 +7,9 @@ on:
     paths:
       - 'worker/**'
 jobs:
-  publish:
+  pr-deploy:
     runs-on: self-hosted
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     env:
       VERSION: ${GITHUB_REF##*/}
@@ -34,12 +34,6 @@ jobs:
       - name: Publish
         run: ./scripts/push-image.sh worker pr-${{ github.event.pull_request.number }}
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
 
       - name: install kubectl
         run: |
@@ -47,6 +41,7 @@ jobs:
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
           sudo rm -rf kubectl
           kubectl get pods
+          
       - name: install vcluster
         run: |
           curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && sudo rm -f vcluster
@@ -64,7 +59,7 @@ jobs:
 
       - name: update image
         run: |
-          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-worker:${{ github.sha }}"' ./scripts/kubernetes/worker.yaml
+          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-worker:pr-${{ github.event.pull_request.number }}"' ./scripts/kubernetes/worker.yaml
           yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db:27017"' ./scripts/kubernetes/worker.yaml
 
       - name: Update changes

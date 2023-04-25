@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  dev-deploy:
     runs-on: self-hosted
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     env:
       VERSION: ${GITHUB_REF##*/}
@@ -31,13 +31,7 @@ jobs:
       - name: Publish
         run: ./scripts/push-image.sh gateway ${{github.sha}}
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
+    
       - name: install kubectl
         run: |
           sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
