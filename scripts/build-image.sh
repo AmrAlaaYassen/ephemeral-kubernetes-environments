@@ -21,8 +21,9 @@
 
 set -u # or set -o nounset
 : "$1"
+: "$2"
 : "$CONTAINER_REGISTRY"
 : "$VERSION"
 
 export DIR=$1
-docker build -t $CONTAINER_REGISTRY/ephemeral-envs-$DIR:$VERSION --file ./$DIR/Dockerfile ./$DIR
+docker build -t $CONTAINER_REGISTRY/ephemeral-envs-$DIR:$2 --file ./$DIR/Dockerfile ./$DIR

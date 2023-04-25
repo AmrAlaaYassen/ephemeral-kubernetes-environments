@@ -26,10 +26,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build
-        run: ./scripts/build-image.sh gateway
+        run: ./scripts/build-image.sh gateway ${{ github.base_ref }}
 
       - name: Publish
-        run: ./scripts/push-image.sh gateway
+        run: ./scripts/push-image.sh gateway ${{ github.base_ref }}
 
       - uses: actions/setup-node@v1
         with:
@@ -66,55 +66,16 @@ jobs:
             git config --local user.email "github-actions[bot]@users.noreply.github.com"
             git config --local user.name "github-actions[bot]"
             git commit -a -m "Add changes"
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           branch: ${{ github.head_ref }}
-      # - uses: azure/setup-kubectl@v3
-      #   id: install-kubectl
-      # - name: update tenant name
-      #   run: |
-
-      #     yq e -i '.metadata.name = "gateway-dev-${{ github.actor_id }}-${{github.sha}}"' tenant.yaml
-      #     yq e -i '.spec.owners[0].name = "dev-${{github.actor_id}}"' tenant.yaml
-      #     cat tenant.yaml
-
-      # - uses: tale/kubectl-action@v1
-      #   with:
-      #     base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-      #     kubectl-version: v1.24.2
-
-      # - name: create KUBECONFIG
-      #   env:
-      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      #   run: |
-      #     sudo ./create-user.sh "dev-${{github.actor_id}}" "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
-
-      # - uses: actions-hub/kubectl@master
-      #   env:
-      #     KUBE_CONFIG: dev-${{github.actor_id}}
-      #   with:
-      #     args: |
-      #       create ns "gateway-dev-${{github.actor_id}}-${{github.sha}}"
-
-      # - name: list files
-      #   run: ls -lR
-
+     
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
         with:
           name: 'dev-${{github.actor}}'
           path: ~/.kube/config
 
-      # - uses: actions-hub/kubectl@master
-      #   env:
-      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      #   with:
-      #     args: |
-      #       get tenants
-      #       - uses: actions-hub/kubectl@master
-      #       env:
-      #         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      #       with:
-      #         args: |
-      #           delete tenant "gateway-dev-${{ github.actor_id }}-${{github.sha}}"
+    

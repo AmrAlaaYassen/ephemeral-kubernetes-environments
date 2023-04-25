@@ -23,6 +23,7 @@
 
 set -u # or set -o nounset
 : "$1"
+: "$2"
 : "$CONTAINER_REGISTRY"
 : "$VERSION"
 : "$REGISTRY_UN"
@@ -30,4 +31,4 @@ set -u # or set -o nounset
 
 export DIR=$1
 
-docker push $CONTAINER_REGISTRY/ephemeral-envs-$DIR:$VERSION
+docker push $CONTAINER_REGISTRY/ephemeral-envs-$DIR:$2
