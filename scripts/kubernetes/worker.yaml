@@ -30,13 +30,13 @@ spec:
     spec:
       containers:
         - name: worker
-          image: "amralaayassen/ephemeral-envs-worker:b23654bbd710fab6a028adb015bd5af425d5ebb2"
+          image: "amralaayassen/ephemeral-envs-worker:ce4d94f7961cc870b0c1d21d8ce21e8beb0d1e77"
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT
               value: "4000"
             - name: DBHOST
-              value: mongodb://db.worker-dev-25800746.svc.cluster.local:27017
+              value: mongodb://db:27017
 ---
 apiVersion: v1
 kind: Service
@@ -52,7 +52,7 @@ spec:
   template:
     spec:
       containers:
-        - image: amralaayassen/ephemeral-envs-worker:b23654bbd710fab6a028adb015bd5af425d5ebb2
+        - image: amralaayassen/ephemeral-envs-worker:ce4d94f7961cc870b0c1d21d8ce21e8beb0d1e77
           env:
             - null
-            - value: mongodb://db.worker-dev-25800746.svc.cluster.local:27017
+            - value: mongodb://db:27017
