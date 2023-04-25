@@ -1,4 +1,4 @@
-name: Development Environment gateway
+name: Development Environment Worker
 
 on:
   workflow_dispatch:
@@ -26,10 +26,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build
-        run: ./scripts/build-image.sh gateway ${{github.sha}}
+        run: ./scripts/build-image.sh worker ${{github.sha}}
 
       - name: Publish
-        run: ./scripts/push-image.sh gateway ${{github.sha}}
+        run: ./scripts/push-image.sh worker ${{github.sha}}
 
       - uses: actions/setup-node@v1
         with:
@@ -49,19 +49,21 @@ jobs:
           curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && sudo rm -f vcluster
       - name: create vcluster for preview env
         run: |
-          vcluster create gateway-dev-${{ github.sha }} --namespace preview-${{github.sha}} &
+          vcluster create worker-dev-${{ github.sha }} --namespace preview-${{github.sha}} &
           sleep 20
-          vcluster connect gateway-dev-${{ github.sha }} --namespace preview-${{github.sha}} &
+          vcluster connect worker-dev-${{ github.sha }} --namespace preview-${{github.sha}} &
 
           sleep 20
-          kubectl create ns gateway-dev-${{ github.actor_id }};
+          kubectl create ns worker-dev-${{ github.actor_id }};
 
       - name: install YQ
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
       - name: update image
         run: |
-          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.sha }}"' ./scripts/kubernetes/gateway.yaml
+          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-worker:${{ github.sha }}"' ./scripts/kubernetes/worker.yaml
+          yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db.worker-dev-${{ github.actor_id }}.svc.cluster.local:27017"' ./scripts/kubernetes/worker.yaml
+
 
       - name: Update changes
         run: |
@@ -78,7 +80,7 @@ jobs:
       - name: Deploy
         run: |
           sudo curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | sudo bash && \
-          ./kustomize build ./scripts/kubernetes | kubectl apply -f - -n gateway-dev-${{ github.actor_id }}
+          ./kustomize build ./scripts/kubernetes | kubectl apply -f - -n worker-dev-${{ github.actor_id }}
 
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
