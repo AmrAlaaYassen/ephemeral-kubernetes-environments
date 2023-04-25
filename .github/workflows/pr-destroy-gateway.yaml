@@ -1,4 +1,4 @@
-name: pr
+name: pr-destroy-gateway
 on:
   pull_request:
     types: [closed]

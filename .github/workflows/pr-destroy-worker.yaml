@@ -1,4 +1,4 @@
-name: pr
+name: pr-destroy-worker
 on:
   pull_request:
     types: [closed]
