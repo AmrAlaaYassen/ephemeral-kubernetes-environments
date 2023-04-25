@@ -64,11 +64,6 @@ jobs:
       - name: update image
         run: |
           yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.base_ref }}"' ./scripts/kubernetes/gateway.yaml
-      - name: Commit files
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Add changes"
 
       - name: Update changes
         run: |
