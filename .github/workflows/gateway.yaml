@@ -49,12 +49,10 @@ jobs:
          vcluster create gateway-dev-${{ github.actor_id }} --namespace preview-dev &
 
          vcluster connect gateway-dev-${{ github.actor_id }} --namespace preview-dev &
-         ls -lR
+       
          sleep 10
          kubectl create ns gateway;
          kubectl run nginx --image nginx -n gateway;
-         sleep 10;
-         vcluster disconnect
       # - name: install YQ
       #   run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
