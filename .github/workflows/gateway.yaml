@@ -14,8 +14,6 @@ jobs:
       REGISTRY_UN: ${{ secrets.DOCKER_USERNAME }}
       REGISTRY_PW: ${{ secrets.DOCKER_PASSWORD  }}
     steps:
-      - name: print env
-        run: env
       - uses: actions/checkout@v2
         name: checkout
         with:
@@ -76,6 +74,11 @@ jobs:
         with:
           github_token: ${{ secrets.TOKEN }}
           repository: ${{ secrets.USERNAME }}/ephemeral-kubernetes-environments
+
+      - name: Deploy
+        run: |
+          sudo curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+          kustomize build ./scripts/kubernetes | kubectl apply -f - -n gateway-dev-${{ github.actor_id }}
 
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
