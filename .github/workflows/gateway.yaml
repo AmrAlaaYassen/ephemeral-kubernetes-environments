@@ -43,10 +43,11 @@ jobs:
           kubectl get pods
       - name: install vcluster
         run: |
-         curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && rm -f vcluster
+         curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && sudo rm -f vcluster
       - name: create vcluster for preview env
         run: |
          vcluster create gateway-dev-${{ github.actor_id }}-${{github.sha}} --namespace preview-dev;
+         vcluster connect gateway-dev-${{ github.actor_id }}-${{github.sha}} --namespace preview-dev;
          ls -lR
          export KUBECONFIG=$PWD/kubeconfig.yaml
          sleep 10
