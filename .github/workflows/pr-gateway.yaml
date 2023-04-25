@@ -67,17 +67,6 @@ jobs:
           yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.sha }}"' ./scripts/kubernetes/gateway.yaml
           yq -e -i '.spec.template.spec.containers[0].env[1].value="mongodb://db:27017"' ./scripts/kubernetes/worker.yaml
 
-      - name: Update changes
-        run: |
-          git config --global user.email ${{secrets.ORG}}
-          git config --global user.name ${{secrets.USERNAME}}
-          git add .
-          git commit -m "push image changes for ${{github.sha}}"
-      - name: Push to Git
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.TOKEN }}
-          repository: ${{ secrets.USERNAME }}/ephemeral-kubernetes-environments
 
       - name: Deploy
         run: |
