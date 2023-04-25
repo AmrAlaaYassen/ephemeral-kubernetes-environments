@@ -36,7 +36,7 @@ spec:
             - name: PORT
               value: "4000"
             - name: DBHOST
-              value: mongodb://db.default.svc.cluster.local:27017
+              value: mongodb://db.worker-dev-25800746.svc.cluster.local:27017
 ---
 apiVersion: v1
 kind: Service
@@ -53,3 +53,6 @@ spec:
     spec:
       containers:
         - image: amralaayassen/ephemeral-envs-worker:b23654bbd710fab6a028adb015bd5af425d5ebb2
+          env:
+            - null
+            - value: mongodb://db.worker-dev-25800746.svc.cluster.local:27017
