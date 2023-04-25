@@ -61,7 +61,7 @@ jobs:
 
       - name: update image
         run: |
-          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ GITHUB_REF##*/ }}"' ./scripts/kubernetes/gateway.yaml
+          yq -e -i '.spec.template.spec.containers[0].image="${{ secrets.CONTAINER_REGISTRY }}/ephemeral-envs-gateway:${{ github.head_ref }}"' ./scripts/kubernetes/gateway.yaml
 
       - name: Update changes
         run: |
