@@ -5,7 +5,7 @@ on:
     paths:
       - 'gateway/**'
 jobs:
-  pr-deplpy:
+  pr-destroy:
     runs-on: self-hosted
     timeout-minutes: 8
    
@@ -25,7 +25,7 @@ jobs:
       - name: install vcluster
         run: |
           curl -L -o vcluster "https://github.com/loft-sh/vcluster/releases/latest/download/vcluster-linux-amd64" && sudo install -c -m 0755 vcluster /usr/local/bin && sudo rm -f vcluster
-      - name: create vcluster for PR env
+      - name: delete vcluster for PR env
         run: |
           vcluster delete gateway-pr-${{ github.event.pull_request.number }} &
           sleep 20
