@@ -57,7 +57,7 @@ jobs:
           vcluster connect gateway-pr-${{ github.event.pull_request.number }} --namespace pr-${{ github.event.pull_request.number }} &
 
           sleep 20
-          kubectl create ns gateway-dev-${{ github.actor_id }};
+          kubectl create ns gateway-pr-${{ github.actor_id }};
 
       - name: install YQ
         run: sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
@@ -82,7 +82,7 @@ jobs:
       - name: Deploy
         run: |
           sudo curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | sudo bash && \
-          ./kustomize build ./scripts/kubernetes | kubectl apply -f - -n gateway-dev-${{ github.actor_id }}
+          ./kustomize build ./scripts/kubernetes | kubectl apply -f - -n gateway-pr-${{ github.actor_id }}
 
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
