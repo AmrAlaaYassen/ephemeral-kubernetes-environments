@@ -71,6 +71,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           branch: ${{ github.head_ref }}
+          github_token: ${{ secrets.TOKEN }}
      
       - name: Artifacting KUBECONFIG Fille
         uses: actions/upload-artifact@v3
