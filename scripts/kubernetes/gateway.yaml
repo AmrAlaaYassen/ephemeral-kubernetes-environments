@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: "amralaayassen/ephemeral-envs-gateway:b61d048fac38ede6d7b79a2a97707df1d86e30a8"
+          image: "amralaayassen/ephemeral-envs-gateway:c14e9ccc95e5138c496e0e71413a7aa4cccaddee"
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT
@@ -50,4 +50,4 @@ spec:
   template:
     spec:
       containers:
-        - image: 'amralaayassen/ephemeral-envs-gateway:b61d048fac38ede6d7b79a2a97707df1d86e30a8'
+        - image: 'amralaayassen/ephemeral-envs-gateway:c14e9ccc95e5138c496e0e71413a7aa4cccaddee'
