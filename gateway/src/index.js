@@ -28,6 +28,10 @@ async function main() {
     app.get("/", (req, res) => {
         res.send('Hello computer!\n');
     });
+     app.get("/featurex", (req, res) => {
+        res.send('Hello to feature x!\n');
+    });
+
 
     app.get("/api/data", async (req, res) => {
         const response = await axios.get(SERVICE_URL + "/api/data")
