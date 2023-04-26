@@ -6,7 +6,7 @@ nodejs-microservices-example
 │   package.json
 │   README.md
 │
-├───.github
+├───.githubAmrAlaaYassen/problem-solving.git
 │   └───workflows
 │           gateway.yaml             -> CICD Pipeline to build and deploy the gateway microservice from any branch on an ephemeral
 |                                       environment.

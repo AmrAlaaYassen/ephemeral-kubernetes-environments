@@ -1,8 +1,7 @@
 name: Development Environment gateway
-
 on:
   workflow_dispatch:
-
+    
 jobs:
   dev-deploy:
     runs-on: self-hosted
