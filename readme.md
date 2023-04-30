@@ -1,4 +1,9 @@
-# Project layout
+## Kubernetes Ephemeral Environment
+This repository contains the demo explained in the article [Ephemeral Kubernetes Environments: A Cost-Effective Solution for Streamlining Minor Environments and Multi-Tenancy]()
+![Kubernets](https://img.shields.io/badge/-Kubernetes-326CE5?style=for-the-badge&logo=Kubernetes&logoColor=white)
+
+
+##### Project layout
 
 ```
 nodejs-microservices-example
@@ -7,7 +12,7 @@ nodejs-microservices-example
 │   README.md
 │
 ├───.githubAmrAlaaYassen/problem-solving.git
-│   └───workflows
+│   └───workflows 
 │           gateway.yaml             -> CICD Pipeline to build and deploy the gateway microservice from any branch on an ephemeral
 |                                       environment.
 │           worker.yaml              -> CICD Pipeline to build and deploy the worker microservice from any branch on an ephemeral
