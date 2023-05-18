@@ -1,4 +1,4 @@
-## Kubernetes Ephemeral Environment
+## Kubernetes Ephemeral Environments
 ![Kubernets](https://img.shields.io/badge/-Kubernetes-326CE5?style=for-the-badge&logo=Kubernetes&logoColor=white)
 ###### This repository contains the demo explained in the article [Ephemeral Kubernetes Environments: A Cost-Effective Solution for Streamlining Minor Environments and Multi-Tenancy](https://amralaayassen.medium.com/ephemeral-kubernetes-environments-a-cost-effective-solution-for-streamlining-minor-environments-d23a00c9f66f)
 
