@@ -14,7 +14,7 @@ function startServer(app) {
                 reject(err);
             }
             else {
-                console.log(`Running on http://${HOST}:${PORT}`);
+                console.log(`Running v1 on http://${HOST}:${PORT}`);
                 resolve();
             }
         });
@@ -26,7 +26,7 @@ async function main() {
     const app = express();
 
     app.get("/", (req, res) => {
-        res.send('Hello computer!\n');
+        res.send('Hello computer v1!\n');
     });
      app.get("/featurex", (req, res) => {
         res.send('Hello to feature x!\n');
